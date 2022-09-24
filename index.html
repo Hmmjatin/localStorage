@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Registration Jatin form</title>
+	</head>
+
+	<body>
+		<center>
+			<h1>Registration Form</h1>
+			<br />
+			<br />
+			<label for="txtName">Name</label>
+			<input type="text" id="txtName" placeholder="Name" /> <br />
+			<label for="txtPhone">Number</label>
+			<input type="text" id="txtPhone" placeholder="Number" /> <br />
+			<label for="txtCity">City</label>&nbsp;
+			<input type="text" id="txtCity" placeholder="City" /> <br />
+			<hr />
+
+			<button onclick="save()">Save</button>
+			<button onclick="show()">Show</button>
+
+			<table border="1" cellspacing="3px" cellpadding="15px">
+				<thead>
+					<th>Name</th>
+					<th>Phone</th>
+					<th>City</th>
+					<th>Delete</th>
+					<th>Edit</th>
+				</thead>
+				<tbody id="tBody"></tbody>
+			</table>
+		</center>
+
+		<script>
+			let arrName = [];
+			let arrPhone = [];
+			let arrCity = [];
+
+			function save() {
+				let name = document.getElementById("txtName").value;
+				let phone = document.getElementById("txtPhone").value;
+				let city = document.getElementById("txtCity").value;
+
+				if (localStorage.getItem("name") != null) {
+					arrName = JSON.parse(localStorage.getItem("name"));
+					arrPhone = JSON.parse(localStorage.getItem("phone"));
+					arrCity = JSON.parse(localStorage.getItem("city"));
+				}
+
+				arrName.push(name);
+				arrPhone.push(phone);
+				arrCity.push(city);
+
+				localStorage.setItem("name", JSON.stringify(arrName));
+				localStorage.setItem("phone", JSON.stringify(arrPhone));
+				localStorage.setItem("city", JSON.stringify(arrCity));
+
+				document.getElementById("txtName").value = "";
+				document.getElementById("txtPhone").value = "";
+				document.getElementById("txtCity").value = "";
+
+				// show()
+			}
+			function show() {
+				document.getElementById("tBody").innerHTML = "";
+				arrName = JSON.parse(localStorage.getItem("name"));
+				arrPhone = JSON.parse(localStorage.getItem("phone"));
+				arrCity = JSON.parse(localStorage.getItem("city"));
+
+				for (i = 0; i < arrName.length; i++) {
+					row = document.createElement("tr");
+
+					cell1 = document.createElement("td");
+					cell2 = document.createElement("td");
+					cell3 = document.createElement("td");
+					cell4 = document.createElement("td");
+					cell5 = document.createElement("td");
+
+					cell1.innerHTML = arrName[i];
+					cell2.innerHTML = arrPhone[i];
+					cell3.innerHTML = arrCity[i];
+
+					delBtn = document.createElement("input");
+					delBtn.setAttribute("type", "button");
+					delBtn.setAttribute("value", "Delete");
+					delBtn.setAttribute("onclick", `del(${i})`);
+
+					cell4.appendChild(delBtn);
+
+					editBtn = document.createElement("input");
+					editBtn.setAttribute("type", "button");
+					editBtn.setAttribute("value", "Edit");
+					editBtn.setAttribute("onclick", `edit(${i})`);
+
+					cell5.appendChild(editBtn);
+
+					row.appendChild(cell1);
+					row.appendChild(cell2);
+					row.appendChild(cell3);
+					row.appendChild(cell4);
+					row.appendChild(cell5);
+
+					document.getElementById("tBody").appendChild(row);
+				}
+			}
+			function del(index) {
+				arrName = JSON.parse(localStorage.getItem("name"));
+				arrPhone = JSON.parse(localStorage.getItem("phone"));
+				arrCity = JSON.parse(localStorage.getItem("city"));
+
+				arrName.splice(index, 1);
+				arrPhone.splice(index, 1);
+				arrCity.splice(index, 1);
+
+				localStorage.setItem("name", JSON.stringify(arrName));
+				localStorage.setItem("phone", JSON.stringify(arrPhone));
+				localStorage.setItem("city", JSON.stringify(arrCity));
+
+				show();
+			}
+			function edit(index) {
+				let name = document.getElementById("txtName").value;
+				let phone = document.getElementById("txtPhone").value;
+				let city = document.getElementById("txtCity").value;
+
+				arrName = JSON.parse(localStorage.getItem("name"));
+				arrPhone = JSON.parse(localStorage.getItem("phone"));
+				arrCity = JSON.parse(localStorage.getItem("city"));
+
+				arrName.splice(index, 1, name);
+				arrPhone.splice(index, 1, phone);
+				arrCity.splice(index, 1, city);
+
+				localStorage.setItem("name", JSON.stringify(arrName));
+				localStorage.setItem("phone", JSON.stringify(arrPhone));
+				localStorage.setItem("city", JSON.stringify(arrCity));
+
+				document.getElementById("txtName").value = "";
+				document.getElementById("txtPhone").value = "";
+				document.getElementById("txtCity").value = "";
+
+				show();
+			}
+		</script>
+	</body>
+</html>
